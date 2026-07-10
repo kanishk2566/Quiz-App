@@ -1,4 +1,4 @@
-import { Questions } from "@/types/questions";
+import { Questions } from "@/types/question";
 
 export const questions: Questions[] = [
   {
