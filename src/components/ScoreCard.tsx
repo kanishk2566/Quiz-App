@@ -1,14 +1,16 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 
-const ScoreCard = () => {
-  const [result, setResult] = useState(1);
-
-  console.log(result);
-
+interface Score {
+  score: number;
+}
+const ScoreCard = ({score}: Score) => {
   return (
-    <div></div>
+    <div>
+      <div>Your Quiz is Completed.</div>
+      <div>Your Score:</div>
+      <div>{score}/10</div>
+    </div>
   )
 }
 

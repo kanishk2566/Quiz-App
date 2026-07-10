@@ -11,15 +11,14 @@ const OptionButtons = ({currentQuestion, selectedOption}: OptionButtonsProps) =>
   console.log(optionsList);
 
   return (
-    <div>
+    <div className='flex flex-col gap-3'>
       {optionsList?.map((item, index) => (
         <div key={index}>
-          <label>
+          <label className='flex gap-2 justify-start items-center hover:cursor-pointer'>
             <input
             onChange={() => selectedOption(index)}
             type='radio'
-            name='option'
-            />
+            name='option' />
             {item}
           </label>
         </div>
