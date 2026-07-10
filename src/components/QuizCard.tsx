@@ -11,17 +11,13 @@ const QuizCard = () => {
 
   function handleSelect(option: number) {
     setSelectedOption(option);
-    console.log(option);
   }
 
   function handleSubmit(){
     router.push("/score");
   }
 
-  console.log(questions);
-
   const currentQuestion = questions.find(question => question.id === questionId);
-  console.log(currentQuestion);
 
   function scoring(): number {
     if(selectedOption === currentQuestion?.correctAnswer){
@@ -39,7 +35,6 @@ const QuizCard = () => {
     if(questionId === 1) return;
     setQuestionId(questionId - 1);
   }
-  console.log(selectedOption);
   return (
     <div className='flex justify-center items-center h-screen flex-col'>
       <div>Question No: {questionId}</div>
