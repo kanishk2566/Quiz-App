@@ -9,17 +9,16 @@ interface OptionButtonsProps {
 const OptionButtons = ({currentQuestion, selectedOption, onSelect}: OptionButtonsProps) => {
 
   const optionsList = currentQuestion?.options;
-  console.log(optionsList);
 
   return (
     <div className='flex flex-col gap-3 my-5'>
       {optionsList?.map((item, index) => (
         <div
         onClick={() => onSelect(index)}
-        className={`px-5 py-2 items-center justify-center font-sans hover:cursor-pointer rounded transition-all duration-200 ${selectedOption === index ? "bg-emerald-500 hover:bg-emerald-500 border border-emerald-700 text-white" : "bg-gray-800/30 hover:bg-gray-500/30 border border-gray-400"}`}
+        className={`px-5 py-2 items-center justify-center font-sans hover:cursor-pointer rounded transition-all duration-200 ${selectedOption === index ? "bg-emerald-500 hover:bg-emerald-500 border border-emerald-500 text-white shadow-lg" : "bg-gray-800/30 hover:bg-gray-500/30 border border-gray-400"}`}
         key={index}>
           <label
-          className={`flex gap-2 justify-center hover:cursor-pointer`}>
+          className={`flex gap-2 justify-center hover:cursor-pointer ${currentQuestion?.id === 1 || currentQuestion?.id === 7 ? "font-sans" : "font-mono"}`}>
             {item}
           </label>
         </div>

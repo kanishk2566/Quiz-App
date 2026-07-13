@@ -1,34 +1,44 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { questions } from '@/data/questions';
 import OptionButtons from './OptionButtons';
 import ScoreCard from './ScoreCard';
-import { MdNavigateNext } from "react-icons/md";
-import { MdNavigateBefore } from "react-icons/md";
+import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { calculateCorrect } from '@/utils/score';
+import { randomQuestion } from '@/utils/randomQuestion';
+import { Question } from '@/types/question';
+
 const QuizCard = () => {
   const [questionId, setQuestionId] = useState(1);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const nextBtn = <MdNavigateNext />;
   const previousBtn = <MdNavigateBefore />;
+  const [shuffledArray, setShuffledArray] = useState<Question[]>([]);
 
   function handleSelect(option: number) {
     setSelectedOption(option);
   }
 
-  const currentQuestion = questions.find(question => question.id === questionId);
+  useEffect(() => {
+      setShuffledArray(randomQuestion(questions));
+  }, []);
 
-  function scoring(): number {
-    if(selectedOption === currentQuestion?.correctAnswer){
-      setScore(score + 1);
-      calculateCorrect(score);
+  const currentQuestion = shuffledArray[questionId - 1];
+
+  function scoring() {
+    if (selectedOption === currentQuestion?.correctAnswer) {
+      setScore(prev => {
+        const newScore = prev + 1;
+        calculateCorrect(newScore);
+        return newScore;
+      });
     }
-    return score;
   }
 
   const handleNext = () => {
-    setQuestionId(questionId + 1);
+    setQuestionId(prev => prev + 1);
     scoring();
     setSelectedOption(null);
   }
@@ -39,6 +49,8 @@ const QuizCard = () => {
   }
 
   console.log(score);
+  console.log(questionId);
+  
   return (
     <div className="flex flex-col justify-center items-center bg-emerald-300 h-screen">
     
@@ -56,18 +68,20 @@ const QuizCard = () => {
         </div>
       </div>
         <div className='font-semibold'>Question No. {questionId}</div>
-      <div className='text-xl font-bold'>
+      <div className='text-xl font-bold font-sans'>
        Q. {currentQuestion?.question}
       </div>
       <OptionButtons currentQuestion={currentQuestion} onSelect={handleSelect} selectedOption={selectedOption} />
       <div className='flex justify-between w-full'>
         <button onClick={handlePrevious} className='bg-emerald-500 py-2 px-8 rounded text-xl text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700'>
-          {previousBtn} 
+          {previousBtn}
         </button>
           <button 
-          className='bg-emerald-500 py-2 px-8 rounded text-xl text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700'
+          className={`bg-emerald-500 py-2 rounded text-sm text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700 ${questionId === 10 ? "pl-3 pr-2" : "px-8"}`}
           disabled={selectedOption === null}
-          onClick={handleNext}> {questionId === 10 ? "Submit" : ""} {nextBtn}</button>
+          onClick={() => {handleNext(); randomQuestion(questions)}}> {questionId === 10 ? "Submit" : ""} 
+          <div className='text-xl'>{nextBtn}</div>
+          </button>
       </div>
       </div>
 }
