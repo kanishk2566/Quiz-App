@@ -7,9 +7,15 @@ interface Score {
 const ScoreCard = ({score}: Score) => {
   return (
     <div className=''>
-      <div>Your Quiz is Completed.</div>
-      <div>Your Score:</div>
-      <div>{score}/10</div>
+      <div>
+        Your Quiz is Completed.
+      </div>
+      <div>
+        Your Score:
+      </div>
+      <div>
+        {score}/10
+      </div>
     </div>
   )
 }

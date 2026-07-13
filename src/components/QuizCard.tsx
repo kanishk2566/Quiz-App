@@ -59,7 +59,7 @@ const QuizCard = () => {
       <div className='text-xl font-bold'>
        Q. {currentQuestion?.question}
       </div>
-      <OptionButtons currentQuestion={currentQuestion} selectedOption={handleSelect} />
+      <OptionButtons currentQuestion={currentQuestion} onSelect={handleSelect} selectedOption={selectedOption} />
       <div className='flex justify-between w-full'>
         <button onClick={handlePrevious} className='bg-emerald-500 py-2 px-8 rounded text-xl text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700'>
           {previousBtn} 
