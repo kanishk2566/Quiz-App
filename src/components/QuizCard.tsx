@@ -11,14 +11,16 @@ import { Question } from '@/types/question';
 
 const QuizCard = () => {
   const [questionId, setQuestionId] = useState(1);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
   const nextBtn = <MdNavigateNext />;
   const previousBtn = <MdNavigateBefore />;
   const [shuffledArray, setShuffledArray] = useState<Question[]>([]);
 
   function handleSelect(option: number) {
-    setSelectedOption(option);
+    setAnswers(prev => ({
+    ...prev,
+    [questionId]: option
+}));
   }
 
   useEffect(() => {
@@ -28,27 +30,40 @@ const QuizCard = () => {
   const currentQuestion = shuffledArray[questionId - 1];
 
   function scoring() {
-    if (selectedOption === currentQuestion?.correctAnswer) {
-      setScore(prev => {
-        const newScore = prev + 1;
-        calculateCorrect(newScore);
-        return newScore;
+      let totalScore = 0;
+
+      shuffledArray.forEach((question) => {
+          if (answers[question.id] === question.correctAnswer) {
+            totalScore++;
+          }
       });
-    }
+
+      calculateCorrect(totalScore);
+      console.log(totalScore);
+
+      return totalScore;
   }
 
   const handleNext = () => {
+    if (questionId === shuffledArray.length) {
+        const finalScore = scoring();
+        console.log(finalScore);
+
+        setQuestionId(prev => prev + 1);
+        return;
+    }
+
     setQuestionId(prev => prev + 1);
-    scoring();
-    setSelectedOption(null);
   }
+
+  const finalScore = scoring();
+  console.log(finalScore);
 
   const handlePrevious = () => {
     if(questionId === 1) return;
     setQuestionId(questionId - 1);
   }
 
-  console.log(score);
   console.log(questionId);
   
   return (
@@ -57,7 +72,7 @@ const QuizCard = () => {
        <div className="bg-white flex justify-center flex-col items-center mx-2 shadow-[0_0_15px_rgba(0,0,0,0.3)] lg:mx-0 sm:max-h-10/12 lg:max-h-6/12 xl:max-h-6/12 sm:max-w-10/12 lg:max-w-6/12 xl:w-5/12 gap-6 py-5 lg:py-10 px-10 rounded min-h-fit">
       
         {questionId > 10 ? (
-        <ScoreCard score={score} />
+        <ScoreCard score={finalScore} />
       ) :
       <div className='flex flex-col justify-center gap-3 w-full'>
         <div className='w-full h-1.5 bg-gray-800/30 rounded'>
@@ -71,14 +86,13 @@ const QuizCard = () => {
       <div className='text-xl font-bold font-sans'>
        Q. {currentQuestion?.question}
       </div>
-      <OptionButtons currentQuestion={currentQuestion} onSelect={handleSelect} selectedOption={selectedOption} />
+      <OptionButtons currentQuestion={currentQuestion} onSelect={handleSelect} selectedOption={answers[questionId] ?? null} />
       <div className='flex justify-between w-full'>
-        <button onClick={handlePrevious} className='bg-emerald-500 py-2 px-8 rounded text-xl text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700'>
+        <button onClick={handlePrevious} className={`bg-emerald-500 py-2 px-8 rounded text-xl text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700 ${questionId === 1 ? "opacity-50" : "opacity-100"}`}>
           {previousBtn}
         </button>
           <button 
-          className={`bg-emerald-500 py-2 rounded text-sm text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700 ${questionId === 10 ? "pl-3 pr-2" : "px-8"}`}
-          disabled={selectedOption === null}
+          className={`bg-emerald-500 py-2 rounded text-sm text-white flex items-center justify-center cursor-pointer hover:ring hover:ring-inset ring-emerald-700 ${questionId === 10 ? "pl-3 pr-2" : "px-8"} ${answers[questionId] === undefined ? "opacity-50" : "opacity-100"}`}
           onClick={() => {handleNext(); randomQuestion(questions)}}> {questionId === 10 ? "Submit" : ""} 
           <div className='text-xl'>{nextBtn}</div>
           </button>
