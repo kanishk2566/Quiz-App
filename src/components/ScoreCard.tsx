@@ -6,7 +6,7 @@ interface Score {
 }
 const ScoreCard = ({score}: Score) => {
   return (
-    <div>
+    <div className=''>
       <div>Your Quiz is Completed.</div>
       <div>Your Score:</div>
       <div>{score}/10</div>
