@@ -20,7 +20,7 @@ const QuizCard = () => {
     setAnswers(prev => ({
     ...prev,
     [questionId]: option
-}));
+  }));
   }
 
   useEffect(() => {
@@ -32,8 +32,9 @@ const QuizCard = () => {
   function scoring() {
       let totalScore = 0;
 
-      shuffledArray.forEach((question) => {
-          if (answers[question.id] === question.correctAnswer) {
+      shuffledArray.forEach((question, index) => {
+        const selectedAnswer = answers[index + 1];
+          if (selectedAnswer === question.correctAnswer) {
             totalScore++;
           }
       });
@@ -46,11 +47,11 @@ const QuizCard = () => {
 
   const handleNext = () => {
     if (questionId === shuffledArray.length) {
-        const finalScore = scoring();
-        console.log(finalScore);
-
-        setQuestionId(prev => prev + 1);
-        return;
+      const finalScore = scoring();
+      console.log(finalScore);
+      
+      setQuestionId(prev => prev + 1);
+      return;
     }
 
     setQuestionId(prev => prev + 1);
@@ -67,17 +68,18 @@ const QuizCard = () => {
   console.log(questionId);
   
   return (
-    <div className="flex flex-col justify-center items-center bg-emerald-300 h-screen">
-    
-       <div className="bg-white flex justify-center flex-col items-center mx-2 shadow-[0_0_15px_rgba(0,0,0,0.3)] lg:mx-0 sm:max-h-10/12 lg:max-h-6/12 xl:max-h-6/12 sm:max-w-10/12 lg:max-w-6/12 xl:w-5/12 gap-6 py-5 lg:py-10 px-10 rounded min-h-fit">
+    <div className="flex flex-col justify-center items-center h-screen">
       
         {questionId > 10 ? (
-        <ScoreCard score={finalScore} />
+        <div className='flex justify-center flex-col items-center mx-2 lg:mx-0 sm:max-h-10/12 lg:max-h-6/12 xl:max-h-6/12 sm:max-w-10/12 lg:max-w-6/12 xl:w-5/12 gap-6 py-5 lg:py-10 px-10 rounded min-h-fit'>
+          <ScoreCard score={finalScore} />
+        </div>
       ) :
-      <div className='flex flex-col justify-center gap-3 w-full'>
+      <div className='bg-white flex justify-center flex-col items-center mx-2 lg:mx-0 sm:max-h-10/12 lg:max-h-6/12 xl:max-h-6/12 sm:max-w-10/12 lg:max-w-6/12 xl:w-5/12 gap-6 py-5 lg:py-10 px-10 rounded min-h-fit'>
+        <div className='flex flex-col justify-center gap-3 w-full'>
         <div className='w-full h-1.5 bg-gray-800/30 rounded'>
         <div
-        style={{width: `${questionId * 10}%`}}
+        style={{width: `${(questionId - 1) * 10}%`}}
         className={`h-1.5 bg-emerald-600 transition-all rounded`}>
 
         </div>
@@ -98,8 +100,8 @@ const QuizCard = () => {
           </button>
       </div>
       </div>
-}
       </div>
+}
     </div>
   )
 }
